@@ -1,0 +1,63 @@
+import openpyxl
+from openpyxl import Workbook
+
+def consolidate_data(input_file, output_file):
+    # Open the input workbook
+    wb = openpyxl.load_workbook(input_file)
+
+    # Create a new workbook for the output
+    new_wb = Workbook()
+    
+    # Create the required sheets in the new workbook
+    gate_1_sheet = new_wb.active
+    gate_1_sheet.title = "Gate 1"
+    gate_2_sheet = new_wb.create_sheet("Gate 2")
+    gate_3_sheet = new_wb.create_sheet("Gate 3")
+    gate_4_sheet = new_wb.create_sheet("Gate 4")
+    
+    # Add headers
+    for sheet in [gate_1_sheet, gate_2_sheet, gate_3_sheet, gate_4_sheet]:
+        sheet.append(['Sheet Name', 'B', 'C', 'D', 'E'])
+
+    # Iterate through each sheet in the input workbook
+    for sheet_name in wb.sheetnames:
+        sheet = wb[sheet_name]
+
+        # For Gate 1: Copy B, C, D, E from each sheet
+        for row in range(2, sheet.max_row + 1):  # Assuming data starts at row 2
+            b_value = sheet[f'B{row}'].value
+            c_value = sheet[f'C{row}'].value
+            d_value = sheet[f'D{row}'].value
+            e_value = sheet[f'E{row}'].value
+            gate_1_sheet.append([sheet_name, b_value, c_value, d_value, e_value])
+
+        # For Gate 2: Copy F, G, H, I from each sheet
+        for row in range(2, sheet.max_row + 1):
+            f_value = sheet[f'F{row}'].value
+            g_value = sheet[f'G{row}'].value
+            h_value = sheet[f'H{row}'].value
+            i_value = sheet[f'I{row}'].value
+            gate_2_sheet.append([sheet_name, f_value, g_value, h_value, i_value])
+
+        # For Gate 3: Copy J, K, L from each sheet
+        for row in range(2, sheet.max_row + 1):
+            j_value = sheet[f'J{row}'].value
+            k_value = sheet[f'K{row}'].value
+            l_value = sheet[f'L{row}'].value
+            gate_3_sheet.append([sheet_name, j_value, k_value, l_value])
+
+        # For Gate 4: Copy M, N, O from each sheet
+        for row in range(2, sheet.max_row + 1):
+            m_value = sheet[f'M{row}'].value
+            n_value = sheet[f'N{row}'].value
+            o_value = sheet[f'O{row}'].value
+            gate_4_sheet.append([sheet_name, m_value, n_value, o_value])
+
+    # Save the consolidated data into the output file
+    new_wb.save(output_file)
+
+
+# Usage example
+input_file = 'input.xlsx'
+output_file = 'consolidated_output.xlsx'
+consolidate_data(input_file, output_file)
