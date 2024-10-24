@@ -1,0 +1,30 @@
+Sub CopyDataToNewSheet()
+
+    Dim wsSource As Worksheet
+    Dim wsTarget As Worksheet
+    Dim lastRow As Long
+    Dim i As Long, j As Long
+    Dim sourceRange As Range
+    Dim header As Range
+    
+    ' Set the source and target sheets
+    Set wsSource = ThisWorkbook.Sheets("Sheet1") ' Replace "Sheet1" with your source sheet name
+    Set wsTarget = ThisWorkbook.Sheets.Add
+    wsTarget.Name = "NewSheet" ' Rename the new sheet to your preference
+
+    ' Loop through columns A to AP (1 to 42)
+    For j = 1 To 42 ' Columns A to AP
+        
+        ' Copy data from rows 2 to 31 of each column to the new sheet column A
+        For i = 2 To 31
+            wsTarget.Cells((i - 1) + (j - 1) * 30, 1).Value = wsSource.Cells(i, j).Value
+        Next i
+        
+        ' Copy the corresponding header (row 1) to the new sheet column B
+        For i = 2 To 31
+            wsTarget.Cells((i - 1) + (j - 1) * 30, 2).Value = wsSource.Cells(1, j).Value
+        Next i
+
+    Next j
+
+End Sub
