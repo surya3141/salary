@@ -1,0 +1,29 @@
+import pandas as pd
+from openpyxl import Workbook
+
+# Load the source Excel file
+source_file = 'source.xlsx'  # Replace with your file name
+sheet_name = 'Sheet1'  # Replace with your source sheet name
+
+# Read the data from the sheet
+df = pd.read_excel(source_file, sheet_name=sheet_name, usecols="A:AP", header=0)
+
+# Initialize a list to hold the data for the new sheet
+new_data = []
+
+# Iterate over each column (A to AP)
+for col in df.columns:
+    # Extract data from rows 2 to 31 (Python uses zero-based index, so it's 1:31)
+    column_data = df[col][1:31].tolist()  # [1:31] picks rows 2-31
+    # Append the extracted data along with the column header (row 1) to new_data
+    new_data.extend([(val, col) for val in column_data])
+
+# Create a new DataFrame with the formatted data
+new_df = pd.DataFrame(new_data, columns=["Data", "Column Header"])
+
+# Save the new data to a new Excel sheet
+output_file = 'output.xlsx'  # Name of the new output file
+with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+    new_df.to_excel(writer, sheet_name='NewSheet', index=False)
+
+print(f"Data successfully copied and saved to {output_file}.")
